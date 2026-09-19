@@ -1,0 +1,122 @@
+import { supabase } from './supabase';
+import { useAuthStore } from '../store/useAuthStore';
+import type { UserIdentity } from '../types';
+import { cloudPullAll } from './syncEngine';
+
+export async function loadProfile(userId: string, email: string): Promise<any> {
+  try {
+    const { data } = await supabase.from('profiles').select('id, email, name, role, is_disabled').eq('id', userId).single();
+    if (data) {
+      if (data.is_disabled) {
+        await supabase.auth.signOut();
+        throw new Error('DISABLED_BY_ADMIN');
+      }
+      return data;
+    }
+    
+    // Create basic profile if none exists
+    const baseName = (email || 'Staff').split('@')[0];
+    const newRow = { id: userId, email: email.toLowerCase(), name: baseName, role: 'worker' };
+    
+    const { count } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+    if (count === 0) newRow.role = 'admin';
+    
+    const { data: insData } = await supabase.from('profiles').insert(newRow).select().single();
+    return insData || newRow;
+  } catch (e) {
+    console.warn('[auth] profile load failed', e);
+    return { id: userId, email: email.toLowerCase(), name: (email || 'Staff').split('@')[0], role: 'worker' };
+  }
+}
+
+export async function refreshSession() {
+  const authStore = useAuthStore.getState();
+  authStore.setLoading(true);
+  
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      const prof = await loadProfile(session.user.id, session.user.email || '');
+      const identity: UserIdentity = {
+        id: session.user.email || session.user.id,
+        uid: session.user.id,
+        email: session.user.email || '',
+        name: String(prof.name || '').toUpperCase(),
+        role: prof.role === 'admin' ? 'admin' : 'worker'
+      };
+      authStore.setUser(identity);
+      
+      // Attempt first pull upon successful restore
+      await cloudPullAll();
+    } else {
+      authStore.setUser(null);
+    }
+  } catch (e: any) {
+    if (e.message === 'DISABLED_BY_ADMIN') {
+      authStore.setError('This login is disabled. Contact your admin.');
+    }
+    authStore.setUser(null);
+  } finally {
+    authStore.setLoading(false);
+  }
+}
+
+export async function login(email: string, pass: string) {
+  const authStore = useAuthStore.getState();
+  authStore.setError(null);
+  authStore.setLoading(true);
+  
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (error) {
+      let m = error.message;
+      if (/invalid login/i.test(m)) m = 'Wrong email or password.';
+      if (/email not confirmed/i.test(m)) m = 'This login is not active yet. Contact your admin.';
+      throw new Error(m);
+    }
+    
+    if (data.user) {
+      const prof = await loadProfile(data.user.id, data.user.email || '');
+      const identity: UserIdentity = {
+        id: data.user.email || data.user.id,
+        uid: data.user.id,
+        email: data.user.email || '',
+        name: String(prof.name || '').toUpperCase(),
+        role: prof.role === 'admin' ? 'admin' : 'worker'
+      };
+      authStore.setUser(identity);
+      
+      // Pull initial data
+      await cloudPullAll();
+    }
+  } catch (e: any) {
+    authStore.setError(e.message || 'Login failed.');
+  } finally {
+    authStore.setLoading(false);
+  }
+}
+
+export async function logout() {
+  const authStore = useAuthStore.getState();
+  try {
+    sessionStorage.removeItem('mansurActiveUser');
+    await supabase.auth.signOut();
+  } catch {
+    console.error('Logout error');
+  }
+  authStore.setUser(null);
+}
+
+// Set up listener for auth state changes
+supabase.auth.onAuthStateChange((event, session) => {
+  const authStore = useAuthStore.getState();
+  if (event === 'SIGNED_OUT') {
+    authStore.setUser(null);
+  } else if (session?.user) {
+    // Only reload if user changed
+    const curr = authStore.user;
+    if (!curr || curr.uid !== session.user.id) {
+      refreshSession();
+    }
+  }
+});

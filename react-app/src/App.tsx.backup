@@ -1,0 +1,58 @@
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AppShell } from './components/AppShell';
+import { useAuthStore } from './store/useAuthStore';
+import { refreshSession } from './lib/auth';
+import { initCloudRealtime } from './lib/syncEngine';
+
+import { CalendarView } from './features/CalendarView';
+import { WorkspaceView } from './features/WorkspaceView';
+import { UploadView } from './features/UploadView';
+import { ReportsView } from './features/ReportsView';
+import { SettingsView } from './features/SettingsView';
+import { LoginView } from './features/LoginView';
+import { TooltipProvider } from './components/ui/tooltip';
+import { Toaster } from './components/ui/sonner';
+
+export const App: React.FC = () => {
+  const { user, isLoading } = useAuthStore();
+
+  useEffect(() => {
+    refreshSession();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      initCloudRealtime();
+    }
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-background">
+        <div className="text-sm font-semibold text-primary animate-pulse">Loading daybook...</div>
+      </div>
+    );
+  }
+
+  return (
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginView />} />
+          
+          <Route element={<AppShell />}>
+            <Route path="/" element={user ? <CalendarView /> : <Navigate to="/login" replace />} />
+            <Route path="/workspace/:dateStr" element={user ? <WorkspaceView /> : <Navigate to="/login" replace />} />
+            <Route path="/upload" element={user ? <UploadView /> : <Navigate to="/login" replace />} />
+            <Route path="/reports" element={user ? <ReportsView /> : <Navigate to="/login" replace />} />
+            <Route path="/settings" element={user ? <SettingsView /> : <Navigate to="/login" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" richColors />
+    </TooltipProvider>
+  );
+};
+
+export default App;

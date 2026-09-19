@@ -1,0 +1,541 @@
+<USER_REQUEST>
+UI NOT WORKING ALSO GETTING DATE ERROR LPS FIX PROEPRLY..
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Mansur Enterprises — Ultra-Dense Warehouse Floor Audit</title>
+<!-- Tailwind CSS CDN with Forms and Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-background": "#131b2e",
+            "surface": "#faf8ff",
+            "primary": "#00236f",
+            "primary-container": "#1e3a8a",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#90a8ff",
+            "secondary": "#006c4a",
+            "secondary-container": "#82f5c1",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "surface-container": "#eaedff",
+            "surface-container-high": "#e2e7ff",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#444651",
+            "outline": "#757682",
+            "outline-variant": "#c5c5d3",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-typography">
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Touch target micro-feel */
+    .tap-target {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 flex justify-center min-h-screen text-slate-900 antialiased selection:bg-blue-100">
+<!-- Mobile Viewport Container (iOS 390px-430px optimal frame) -->
+<div class="w-full max-w-[430px] bg-[#f4f6fb] min-h-screen flex flex-col shadow-2xl relative border-x border-slate-300">
+<!-- BEGIN: TopHeader (Ultra-Dense Audit Bar) -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-2.5 pt-2 pb-1.5 shadow-xs" data-purpose="sticky-header">
+<!-- Micro Top Row: Back, Date, Location & Reset -->
+<div class="flex items-center justify-between gap-1.5 mb-1.5">
+<div class="flex items-center space-x-1.5">
+<button aria-label="Back" class="p-1 rounded bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 active:scale-95 transition-all tap-target" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="flex items-center space-x-1.5 leading-none">
+<div class="p-1 bg-blue-50 text-blue-800 rounded">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-1">
+<h1 class="text-xs font-extrabold tracking-tight text-slate-900 font-mono">16/09/2026</h1>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+</div>
+<p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Mansur • WH Floor Audit</p>
+</div>
+</div>
+</div>
+<!-- Quick Floor Micro-actions -->
+<div class="flex items-center space-x-1">
+<span class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-extrabold tracking-wider">SPEED AUDIT</span>
+<button aria-label="Reset workspace" class="p-1 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent transition-colors tap-target" title="Reset All" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Segmented Pill Tabs (Audit Workflow) -->
+<nav aria-label="Review Workflow Tabs" class="flex p-0.5 bg-slate-100 rounded-md space-x-0.5 mb-1.5 text-[11px] font-semibold text-slate-600">
+<button class="flex-1 flex items-center justify-center py-1 px-1.5 rounded bg-white text-blue-900 font-extrabold shadow-2xs transition-all" type="button">
+<svg class="w-3 h-3 mr-1 text-blue-700 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M4 6h16M4 10h16M4 14h10M4 18h7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Review</span>
+<span class="ml-1 px-1.5 py-0.1 bg-blue-100 text-blue-900 text-[10px] font-black rounded-full">119</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-1 px-1.5 rounded hover:text-slate-900 transition-colors" type="button">
+<svg class="w-3 h-3 mr-1 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Final</span>
+<span class="ml-1 px-1.5 py-0.1 bg-slate-200 text-slate-700 text-[10px] font-bold rounded-full">0</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-1 px-1.5 rounded hover:text-slate-900 transition-colors" type="button">
+<svg class="w-3 h-3 mr-1 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Report</span>
+</button>
+</nav>
+<!-- Slim High-Density Progress Telemetry Bar -->
+<div class="bg-slate-50 border border-slate-200/90 rounded-md p-1.5 mb-1.5" data-purpose="progress-telemetry">
+<div class="flex items-center justify-between text-[10px] leading-tight mb-1">
+<div class="flex items-center space-x-1 font-medium">
+<span class="font-extrabold text-slate-900 bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono">28/119</span>
+<span class="text-slate-500 font-medium">done</span>
+<span class="text-slate-300">|</span>
+<span class="text-blue-700 font-bold bg-blue-50 px-1 py-0.2 rounded">18 refill</span>
+<span class="text-slate-600 font-semibold bg-slate-200/70 px-1 py-0.2 rounded">10 skip</span>
+</div>
+<div class="flex items-center space-x-1">
+<button class="text-[9px] font-bold text-slate-700 bg-white hover:bg-slate-100 active:scale-95 px-1.5 py-0.5 rounded border border-slate-300 shadow-2xs tap-target" type="button">
+          Skip all
+        </button>
+<button class="text-[9px] font-semibold text-slate-400 hover:text-slate-700 px-1 py-0.5 tap-target" type="button">
+          Reset
+        </button>
+</div>
+</div>
+<!-- 3px Ultra-Slim Progress Line -->
+<div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden flex">
+<div class="bg-blue-600 h-full transition-all duration-300" style="width: 15%;"></div>
+<div class="bg-slate-400 h-full transition-all duration-300" style="width: 9%;"></div>
+</div>
+</div>
+<!-- Search & Brand Micro-Pills Filter Bar -->
+<div class="space-y-1" data-purpose="compact-filters">
+<div class="flex items-center gap-1">
+<!-- Search Input -->
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+</span>
+<input class="w-full text-[11px] pl-6 pr-2 py-1 bg-white border border-slate-200 rounded placeholder-slate-400 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs" placeholder="Search item, code, bin..." type="search"/>
+</div>
+<!-- Brand Pill Dropdown -->
+<div class="relative w-28 shrink-0">
+<select class="w-full text-[10px] font-bold bg-white border border-slate-200 rounded py-1 pl-1.5 pr-4 text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none shadow-2xs truncate">
+<option>Brands (14)</option>
+<option>4EVER</option>
+<option>ALL TIME</option>
+<option>BOROSIL</option>
+<option>CELLTONE</option>
+<option>ARIANE</option>
+</select>
+<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5 text-slate-400">
+<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<!-- Status Pill Dropdown -->
+<div class="relative w-24 shrink-0">
+<select class="w-full text-[10px] font-bold bg-white border border-slate-200 rounded py-1 pl-1.5 pr-4 text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none shadow-2xs truncate">
+<option>Pending (91)</option>
+<option>Refilled (18)</option>
+<option>Skipped (10)</option>
+<option>All Status</option>
+</select>
+<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5 text-slate-400">
+<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: Ultra-Dense Item Cards List (Warehouse Fast-Walk Ergonomics) -->
+<main class="flex-1 px-2 py-2 space-y-1.5 pb-28" data-purpose="item-density-list">
+<!-- ITEM 1: UNPROCESSED REGULAR ITEM (Compact Row + Rapid Thumb Action Buttons) -->
+<article class="bg-white rounded-md border border-slate-200 p-2 shadow-2xs transition-all hover:border-blue-300" data-purpose="unprocessed-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5 overflow-hidden">
+<span class="text-[11px] font-black text-slate-400 font-mono">#01</span>
+<span class="px-1.5 py-0.2 bg-slate-800 text-white text-[9px] font-black uppercase rounded tracking-wider">4EVER</span>
+<span class="inline-flex items-center text-[9px] font-bold text-amber-800 bg-amber-100/80 border border-amber-300 px-1.5 py-0.1 rounded">
+          → Apsara Bin 04
+        </span>
+</div>
+<span class="text-[9px] text-slate-500 font-mono font-semibold">CODE: 7412</span>
+</div>
+<!-- Product Title & Description -->
+<div class="mb-1">
+<h2 class="text-[11px] font-bold text-slate-900 leading-tight uppercase truncate">WHITE INDIE SMALL PLATE 7.5"</h2>
+<p class="text-[10px] text-slate-500 font-medium truncate leading-tight">Glazed Opal Glassware • Case of 24</p>
+</div>
+<!-- Micro Telemetry Grid + Ergonomic One-Tap Action Cluster -->
+<div class="flex items-center justify-between pt-1 border-t border-slate-100">
+<!-- High-Contrast Numeric Telemetry -->
+<div class="flex items-center divide-x divide-slate-100 text-center font-mono">
+<div class="pr-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">OPN</span>
+<span class="font-extrabold text-slate-800 text-xs leading-none">21</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">SLD</span>
+<span class="font-extrabold text-slate-800 text-xs leading-none">1</span>
+</div>
+<div class="px-2 text-left bg-emerald-50/80 rounded px-1.5 py-0.5">
+<span class="block text-[8px] font-black text-emerald-800 uppercase tracking-tighter">BAL</span>
+<span class="font-black text-emerald-700 text-xs leading-none">20</span>
+</div>
+<div class="pl-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">RATE</span>
+<span class="font-bold text-slate-700 text-xs leading-none">₹143</span>
+</div>
+</div>
+<!-- Thumb-Friendly Ergonomic Right-Edge Actions -->
+<div class="flex items-center space-x-1 shrink-0">
+<button class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 active:scale-90 active:bg-slate-300 transition-all tap-target" type="button">
+          Skip
+        </button>
+<button class="px-3.5 py-1 text-[11px] font-extrabold text-white bg-blue-700 hover:bg-blue-800 rounded shadow-xs active:scale-90 transition-all tap-target flex items-center space-x-1" type="button">
+<span>Refill</span>
+<svg class="w-3 h-3 text-blue-200" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- ITEM 2: ZERO STOCK ALERT (High-Contrast Red Accent, 0 BAL Indicator) -->
+<article class="bg-red-50/60 rounded-md border-2 border-red-500 p-2 shadow-2xs transition-all" data-purpose="zero-stock-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5 overflow-hidden">
+<span class="text-[11px] font-black text-red-600 font-mono">#02</span>
+<span class="px-1.5 py-0.2 bg-red-700 text-white text-[9px] font-black uppercase rounded tracking-wider">ALL TIME</span>
+<span class="inline-flex items-center space-x-1 text-[9px] font-black text-red-900 bg-red-200/90 border border-red-400 px-1.5 py-0.1 rounded animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+<span>OUT OF STOCK</span>
+</span>
+</div>
+<span class="text-[9px] text-red-700 font-bold bg-white px-1 py-0.2 rounded border border-red-200">MRP ₹95</span>
+</div>
+<!-- Product Title & Warning -->
+<div class="mb-1">
+<h2 class="text-[11px] font-black text-red-950 leading-tight truncate uppercase">408337 — AT 250ML ORANGE SQUEEZER</h2>
+<p class="text-[10px] text-red-700 font-semibold truncate leading-tight">Citrus Hand Press • Fast Moving SKU</p>
+</div>
+<!-- Numeric Telemetry Grid + Urgent Refill Button -->
+<div class="flex items-center justify-between pt-1 border-t border-red-200">
+<div class="flex items-center divide-x divide-red-200 text-center font-mono">
+<div class="pr-2 text-left">
+<span class="block text-[8px] font-bold text-red-500 uppercase tracking-tighter">OPN</span>
+<span class="font-bold text-slate-800 text-xs leading-none">12</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-red-500 uppercase tracking-tighter">SLD</span>
+<span class="font-bold text-slate-800 text-xs leading-none">12</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-black text-red-700 uppercase tracking-tighter">BAL</span>
+<span class="px-1.5 py-0.5 rounded bg-red-600 text-white font-black text-[10px] leading-none inline-block">0 BAL</span>
+</div>
+<div class="pl-2 text-left">
+<span class="block text-[8px] font-bold text-slate-500 uppercase tracking-tighter">RATE</span>
+<span class="font-bold text-slate-700 text-xs leading-none">₹85</span>
+</div>
+</div>
+<!-- Urgent Ergonomic Action -->
+<div class="flex items-center space-x-1 shrink-0">
+<button class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-white hover:bg-slate-100 rounded border border-red-200 active:scale-90 transition-all tap-target" type="button">
+          Skip
+        </button>
+<button class="px-3.5 py-1 text-[11px] font-black text-white bg-red-600 hover:bg-red-700 rounded shadow-xs active:scale-90 transition-all tap-target flex items-center space-x-1" type="button">
+<span>Refill !</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ITEM 3: PROCESSED REFILL (Emerald Tint, Destination Godown Badge & Undo) -->
+<article class="bg-emerald-50/70 rounded-md border border-emerald-300 p-2 shadow-2xs transition-all" data-purpose="processed-refill-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-black text-emerald-700 font-mono">#03</span>
+<span class="px-1.5 py-0.2 bg-emerald-800 text-white text-[9px] font-black uppercase rounded tracking-wider">BOROSIL</span>
+<span class="inline-flex items-center text-[9px] font-extrabold text-emerald-900 bg-emerald-200 border border-emerald-400 px-1.5 py-0.1 rounded">
+          ✓ Refilled → Godown 1
+        </span>
+</div>
+<span class="text-[10px] font-extrabold text-emerald-800 font-mono bg-white px-1.5 py-0.2 rounded border border-emerald-200">+15 PCS</span>
+</div>
+<div class="mb-1">
+<h2 class="text-[11px] font-bold text-slate-900 leading-tight uppercase truncate">KLIP N STORE CONTAINER 400ML</h2>
+<p class="text-[10px] text-slate-600 font-medium truncate leading-tight">Microwave Safe Glass Box • Rack C-12</p>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-emerald-200/80">
+<div class="flex items-center divide-x divide-emerald-200 text-center font-mono">
+<div class="pr-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">OPN</span>
+<span class="font-bold text-slate-800 text-xs leading-none">45</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-emerald-800 uppercase tracking-tighter">PUR</span>
+<span class="font-black text-emerald-700 text-xs leading-none">+15</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-emerald-800 uppercase tracking-tighter">BAL</span>
+<span class="font-black text-emerald-800 text-xs leading-none">50</span>
+</div>
+<div class="pl-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">RATE</span>
+<span class="font-bold text-slate-700 text-xs leading-none">₹210</span>
+</div>
+</div>
+<!-- Quick Undo Action -->
+<button class="inline-flex items-center space-x-1 px-3 py-1 text-[11px] font-bold text-slate-700 bg-white hover:bg-slate-100 rounded border border-slate-300 shadow-2xs active:scale-90 transition-all tap-target" type="button">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M3 10h10a4 4 0 014 4v2m-14-6l4-4m-4 4l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Undo</span>
+</button>
+</div>
+</article>
+<!-- ITEM 4: PROCESSED SKIPPED (Muted Opacity, Strikethrough, Instant Undo) -->
+<article class="bg-slate-100/90 opacity-65 rounded-md border border-slate-300 p-2 transition-all hover:opacity-100" data-purpose="processed-skipped-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-black text-slate-400 font-mono">#04</span>
+<span class="px-1.5 py-0.2 bg-slate-300 text-slate-700 text-[9px] font-black uppercase rounded tracking-wider">CELLTONE</span>
+<span class="inline-flex items-center text-[9px] font-bold text-slate-700 bg-slate-200 border border-slate-300 px-1.5 py-0.1 rounded">
+          ✕ Skipped Audit
+        </span>
+</div>
+<span class="text-[9px] text-slate-500 font-mono">BAL: 8</span>
+</div>
+<div class="mb-1">
+<h2 class="text-[11px] font-bold text-slate-600 line-through leading-tight uppercase truncate">14x10 SS CHOPPING BOARD (HEAVY)</h2>
+<p class="text-[10px] text-slate-400 font-medium truncate leading-tight">Heavy Grade 304 Board • ₹320</p>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-slate-200">
+<span class="text-[9px] text-slate-500 italic">By floor admin @ 10:42 AM</span>
+<button class="inline-flex items-center space-x-1 px-3 py-1 text-[11px] font-bold text-slate-700 bg-white hover:bg-slate-50 rounded border border-slate-300 shadow-2xs active:scale-90 transition-all tap-target" type="button">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M3 10h10a4 4 0 014 4v2m-14-6l4-4m-4 4l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Undo</span>
+</button>
+</div>
+</article>
+<!-- ITEM 5: UNPROCESSED (HIGH INVENTORY HEALTHY ITEM) -->
+<article class="bg-white rounded-md border border-slate-200 p-2 shadow-2xs transition-all hover:border-blue-300" data-purpose="unprocessed-high-stock-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-black text-slate-400 font-mono">#05</span>
+<span class="px-1.5 py-0.2 bg-slate-800 text-white text-[9px] font-black uppercase rounded tracking-wider">ARIANE</span>
+<span class="inline-flex items-center text-[9px] font-bold text-blue-800 bg-blue-100 border border-blue-200 px-1.5 py-0.1 rounded">
+          Sufficient Stock
+        </span>
+</div>
+<span class="text-[9px] text-slate-500 font-mono">MRP ₹185</span>
+</div>
+<div class="mb-1">
+<h2 class="text-[11px] font-bold text-slate-900 leading-tight uppercase truncate">PRIME 30CL NON STACKABLE MUG</h2>
+<p class="text-[10px] text-slate-500 font-medium truncate leading-tight">Fine Porcelain White Series • Pallet B</p>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-slate-100">
+<div class="flex items-center divide-x divide-slate-100 text-center font-mono">
+<div class="pr-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">OPN</span>
+<span class="font-bold text-slate-800 text-xs leading-none">120</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">SLD</span>
+<span class="font-bold text-slate-800 text-xs leading-none">6</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-black text-slate-600 uppercase tracking-tighter">BAL</span>
+<span class="font-black text-slate-900 text-xs leading-none">114</span>
+</div>
+<div class="pl-2 text-left">
+<span class="block text-[8px] font-bold text-emerald-700 uppercase tracking-tighter">RATE</span>
+<span class="font-bold text-slate-700 text-xs leading-none">₹185</span>
+</div>
+</div>
+<!-- Ergonomic Action Pair -->
+<div class="flex items-center space-x-1 shrink-0">
+<button class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 active:scale-90 transition-all tap-target" type="button">
+          Skip
+        </button>
+<button class="px-3.5 py-1 text-[11px] font-extrabold text-white bg-blue-700 hover:bg-blue-800 rounded shadow-xs active:scale-90 transition-all tap-target flex items-center space-x-1" type="button">
+<span>Refill</span>
+<svg class="w-3 h-3 text-blue-200" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- ITEM 6: ADDITIONAL HIGH-SPEED AUDIT ROW (Pending) -->
+<article class="bg-white rounded-md border border-slate-200 p-2 shadow-2xs transition-all hover:border-blue-300" data-purpose="unprocessed-card">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-black text-slate-400 font-mono">#06</span>
+<span class="px-1.5 py-0.2 bg-slate-800 text-white text-[9px] font-black uppercase rounded tracking-wider">BOROSIL</span>
+<span class="inline-flex items-center text-[9px] font-bold text-purple-800 bg-purple-100 border border-purple-200 px-1.5 py-0.1 rounded">
+          → Godown 2
+        </span>
+</div>
+<span class="text-[9px] text-slate-500 font-mono">CODE: 8821</span>
+</div>
+<div class="mb-1">
+<h2 class="text-[11px] font-bold text-slate-900 leading-tight uppercase truncate">VISION GLASS 295ML (SET OF 6)</h2>
+<p class="text-[10px] text-slate-500 font-medium truncate leading-tight">Heat Resistant • Retail Pack</p>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-slate-100">
+<div class="flex items-center divide-x divide-slate-100 text-center font-mono">
+<div class="pr-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">OPN</span>
+<span class="font-bold text-slate-800 text-xs leading-none">18</span>
+</div>
+<div class="px-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">SLD</span>
+<span class="font-bold text-slate-800 text-xs leading-none">14</span>
+</div>
+<div class="px-2 text-left bg-amber-50 rounded px-1.5 py-0.5">
+<span class="block text-[8px] font-black text-amber-700 uppercase tracking-tighter">BAL</span>
+<span class="font-black text-amber-800 text-xs leading-none">4</span>
+</div>
+<div class="pl-2 text-left">
+<span class="block text-[8px] font-bold text-slate-400 uppercase tracking-tighter">RATE</span>
+<span class="font-bold text-slate-700 text-xs leading-none">₹340</span>
+</div>
+</div>
+<div class="flex items-center space-x-1 shrink-0">
+<button class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 active:scale-90 transition-all tap-target" type="button">
+          Skip
+        </button>
+<button class="px-3.5 py-1 text-[11px] font-extrabold text-white bg-blue-700 hover:bg-blue-800 rounded shadow-xs active:scale-90 transition-all tap-target flex items-center space-x-1" type="button">
+<span>Refill</span>
+<svg class="w-3 h-3 text-blue-200" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+</main>
+<!-- END: CompactItemList -->
+<!-- BEGIN: MobileBottomNavigation (Standard 5-Tab Ergonomic Navigation) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 border-t border-slate-200/90 py-1 px-2 flex items-center justify-around z-50 backdrop-blur-md shadow-[0_-4px_16px_rgba(0,0,0,0.06)]" data-purpose="bottom-nav-bar">
+<!-- Daybook (Active) -->
+<button class="flex flex-col items-center justify-center text-blue-800 flex-1 py-1 group tap-target" type="button">
+<div class="p-1 rounded-md bg-blue-50 text-blue-800">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</div>
+<span class="text-[9px] font-black tracking-tight mt-0.5">Daybook</span>
+</button>
+<!-- 0 Stock -->
+<button class="flex flex-col items-center justify-center text-slate-500 hover:text-slate-900 flex-1 py-1 group tap-target" type="button">
+<div class="p-1 rounded-md group-hover:bg-slate-100 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[9px] font-bold tracking-tight mt-0.5">0 Stock</span>
+</button>
+<!-- Elevated Upload FAB -->
+<div class="flex flex-col items-center justify-center flex-1 -mt-4">
+<button aria-label="Upload New Stock" class="w-11 h-11 bg-blue-700 hover:bg-blue-800 text-white rounded-full flex items-center justify-center shadow-lg shadow-blue-700/30 border-4 border-[#f4f6fb] active:scale-95 transition-all tap-target" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-[9px] font-black text-blue-900 mt-0.5">Upload</span>
+</div>
+<!-- Reports -->
+<button class="flex flex-col items-center justify-center text-slate-500 hover:text-slate-900 flex-1 py-1 group tap-target" type="button">
+<div class="p-1 rounded-md group-hover:bg-slate-100 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[9px] font-bold tracking-tight mt-0.5">Reports</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center justify-center text-slate-500 hover:text-slate-900 flex-1 py-1 group tap-target" type="button">
+<div class="p-1 rounded-md group-hover:bg-slate-100 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[9px] font-bold tracking-tight mt-0.5">Settings</span>
+</button>
+</nav>
+<!-- END: MobileBottomNavigation -->
+</div>
+</body></html>
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-17T16:19:39+05:30.
+
+The user's current state is as follows:
+Active Document: c:\dailystock\react-app\src\features\Workspace\ReviewList.tsx (LANGUAGE_TSX)
+Cursor is on line: 1
+Other open documents:
+- c:\dailystock\react-app\src\features\Workspace\ReviewList.tsx (LANGUAGE_TSX)
+Browser State:
+  Page 792C6D5CBE72B60F8B48B616613E9F9A (Vantage widget) - https://vantage.csw.lenovo.com/v1/web/containerwidget/default/ [ACTIVE]
+    Viewport: 64x64, Page Height: 64
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.1 Pro (High) to Claude Sonnet 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
