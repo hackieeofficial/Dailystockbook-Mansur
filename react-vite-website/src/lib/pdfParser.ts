@@ -286,7 +286,7 @@ export function saveExtractedPDFToStore(dateStr: string, extractedProducts: Extr
     finalExtracted = extractedProducts;
   } else {
     // Merge without overwriting processed items
-    const updatedExtracted = [...currentReport.extracted];
+    const updatedExtracted = currentReport.extracted ? [...currentReport.extracted] : [];
     extractedProducts.forEach(newProd => {
       const existingIdx = updatedExtracted.findIndex(e => e.id === newProd.id);
       if (existingIdx === -1) {
