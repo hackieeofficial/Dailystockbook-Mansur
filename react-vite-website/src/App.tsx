@@ -131,6 +131,7 @@ export const App: React.FC = () => {
               <Route path="/upload" element={<UploadView />} />
               <Route path="/reports" element={<ReportsView />} />
               <Route path="/settings" element={<SettingsView />} />
+              <Route path="*" element={<CalendarView />} />
             </Route>
           </Routes>
         </BrowserRouter>

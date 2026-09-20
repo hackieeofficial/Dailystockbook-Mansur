@@ -37,7 +37,7 @@ export const ReportsView: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('ALL');
 
   // Instead of using useAppStore().dailyReports for history, we use React Query!
-  const { data: cloudReports } = useQuery({
+  const { data: cloudReports, error: queryError } = useQuery({
     queryKey: ['reportsList', fromDate, toDate],
     queryFn: async () => {
       let query = supabase.from('daily_reports').select('date_str, data');
@@ -52,10 +52,10 @@ export const ReportsView: React.FC = () => {
           curr.setDate(curr.getDate() + 1);
         }
         
-        // Prevent URL overflow for massive ranges, fallback to full fetch if > 100 days
-        if (requestedDates.length <= 100) {
-          query = query.in('date_str', requestedDates);
+        if (requestedDates.length > 31) {
+          throw new Error("Date range exceeds the maximum allowed limit of 31 days. Please select a narrower range.");
         }
+        query = query.in('date_str', requestedDates);
       }
       const { data, error } = await query;
       if (error) throw error;
@@ -272,6 +272,15 @@ export const ReportsView: React.FC = () => {
           </div>
         </div>
       </section>
+      
+      {queryError && (
+        <div className="bg-red-50 p-4 rounded-xl border border-red-200 text-red-700 text-xs font-semibold shadow-sm animate-fade-in text-center">
+          <p className="flex items-center justify-center gap-2">
+            <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            {(queryError as Error).message}
+          </p>
+        </div>
+      )}
 
       {/* Summary Stats Banner */}
       <section className="bg-white rounded-xl px-3 py-2 border border-brand-border shadow-xs flex flex-wrap items-center gap-2 justify-center" data-purpose="summary-stats-banner">
