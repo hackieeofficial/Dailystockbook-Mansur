@@ -597,6 +597,13 @@ export const useAppStore = create<AppState>()((set) => {
           newItem.processed = false;
           nextReport.extracted[itemIdx] = newItem;
         }
+
+        const goneIds = (nextReport.final || []).filter(t => t.originalId === itemId && t.taskId).map(t => t.taskId);
+        nextReport.final = (nextReport.final || []).filter(t => t.originalId !== itemId);
+        
+        nextReport.tombstones = { ...nextReport.tombstones };
+        const now = Date.now();
+        goneIds.forEach(id => { if (id) nextReport.tombstones[id] = now; });
         
         const stats = nextReport.extracted ? {
           totalSkus: nextReport.extracted.length,
