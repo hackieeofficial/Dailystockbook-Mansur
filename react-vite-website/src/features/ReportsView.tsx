@@ -153,13 +153,16 @@ export const ReportsView: React.FC = () => {
   const completedCount = filteredData.filter(t => !t.isSkipped && t.status === 'Completed').length;
   const pendingCount = filteredData.filter(t => !t.isSkipped && t.status !== 'Completed').length;
   
-  const setPreset = (preset: 'today' | 'all') => {
+  const setPreset = (preset: 'today' | '30days') => {
     if (preset === 'today') {
       setFromDate(todayStr);
       setToDate(todayStr);
     } else {
-      setFromDate('');
-      setToDate('');
+      const d = new Date();
+      d.setDate(d.getDate() - 30);
+      const past30Str = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      setFromDate(past30Str);
+      setToDate(todayStr);
     }
   };
 
@@ -189,12 +192,12 @@ export const ReportsView: React.FC = () => {
                 Today
               </button>
               <button 
-                onClick={() => setPreset('all')}
-                aria-pressed={!fromDate && !toDate} 
-                className={`px-2.5 py-1 rounded-md transition-all focus:outline-none text-[11px] font-bold ${!fromDate && !toDate ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`} 
+                onClick={() => setPreset('30days')}
+                aria-pressed={fromDate !== todayStr || toDate !== todayStr} 
+                className={`px-2.5 py-1 rounded-md transition-all focus:outline-none text-[11px] font-bold ${(fromDate !== todayStr || toDate !== todayStr) ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`} 
                 type="button"
               >
-                All Time
+                Last 30 Days
               </button>
             </div>
             <button onClick={handlePrint} className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-[#1e293b] hover:bg-[#0f172a] active:scale-95 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg shadow-sm transition-all focus:outline-none" data-purpose="print-btn" title="Print Report" type="button">

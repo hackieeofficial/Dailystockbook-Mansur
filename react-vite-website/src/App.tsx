@@ -99,6 +99,7 @@ export const App: React.FC = () => {
       logger.info('network', 'statusChange', 'Browser came online');
       useSyncStore.getState().setIsCloudOnline(true);
       refreshSession();
+      import('./lib/syncEngine').then(m => m.flushPending());
     };
     const handleOffline = () => {
       logger.warn('network', 'statusChange', 'Browser went offline');
