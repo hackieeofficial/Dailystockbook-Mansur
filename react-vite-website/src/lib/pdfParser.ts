@@ -279,14 +279,11 @@ export function saveExtractedPDFToStore(dateStr: string, extractedProducts: Extr
   const appStore = useAppStore.getState();
   const currentReport = appStore.dailyReports[dateStr];
 
+  let finalExtracted = extractedProducts;
+
   if (!currentReport) {
-    appStore.updateDailyReport(dateStr, {
-      extracted: extractedProducts,
-      final: [],
-      tombstones: {},
-      _by: 'react-v1',
-      _at: Date.now()
-    });
+    // New report
+    finalExtracted = extractedProducts;
   } else {
     // Merge without overwriting processed items
     const updatedExtracted = [...currentReport.extracted];
@@ -308,12 +305,20 @@ export function saveExtractedPDFToStore(dateStr: string, extractedProducts: Extr
         };
       }
     });
-    
-    appStore.updateDailyReport(dateStr, {
-      ...currentReport,
-      extracted: updatedExtracted,
-      _at: Date.now(),
-      _by: 'react-v1'
-    });
+    finalExtracted = updatedExtracted;
   }
+
+  const stats = {
+    totalSkus: finalExtracted.length,
+    processedSkus: finalExtracted.filter(item => item.processed).length,
+    zeroStockSkus: finalExtracted.filter(item => item.balanceQty <= 0).length
+  };
+
+  appStore.updateDailyReport(dateStr, {
+    ...(currentReport || { final: [], tombstones: {} }),
+    extracted: finalExtracted,
+    stats,
+    _at: Date.now(),
+    _by: 'react-v1'
+  });
 }

@@ -59,11 +59,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
             </div>
 
-            <div className="w-full bg-slate-50 rounded-lg border border-slate-200 p-3 text-left overflow-auto max-h-32 mt-2">
-              <p className="text-[10px] font-mono text-rose-600 whitespace-pre-wrap break-words">
-                {this.state.error?.toString() || 'Unknown Error'}
-              </p>
-            </div>
+
 
             <button
               onClick={this.handleReload}

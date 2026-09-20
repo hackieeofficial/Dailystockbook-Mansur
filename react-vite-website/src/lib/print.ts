@@ -98,7 +98,8 @@ function buildRefillPdf(list: any[], meta: any) {
         data.cell.styles.halign = 'center';
       }
       if (data.section === 'body' && data.column.index === 6 && data.row.cells[0].colSpan === 1) {
-        data.cell.styles.textColor = [0,0,0];
+        data.cell.styles.textColor = [120, 120, 120];
+        data.cell.styles.fontStyle = 'italic';
       }
     },
     didDrawCell: function (data: any) {

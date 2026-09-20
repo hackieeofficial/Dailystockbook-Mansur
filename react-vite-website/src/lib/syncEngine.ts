@@ -29,10 +29,10 @@ export async function cloudPullAll(): Promise<{ ok: boolean; missing: boolean }>
   
   try {
     // 1. Fetch lightweight metadata for ALL reports (just so Calendar knows what exists)
-    // We fetch a tiny slice of data so we know the extractedCount
+    // We fetch data->stats to avoid downloading large extracted arrays for historical reports
     const { data: allDatesData, error: datesErr } = await supabase
       .from('daily_reports')
-      .select('date_str, data->extracted');
+      .select('date_str, data->stats');
 
     if (datesErr) {
       syncStore.decrementPull();
@@ -71,7 +71,8 @@ export async function cloudPullAll(): Promise<{ ok: boolean; missing: boolean }>
         // If we don't have it locally at all, create a skeleton
         if (!localReports[row.date_str]) {
           localReports[row.date_str] = {
-             extracted: row.extracted || [],
+             extracted: null as any, // Don't create an empty array, it prevents bugs where views think they have all data
+             stats: row.stats || null,
              final: [],
              _by: 'skeleton',
              _at: 0

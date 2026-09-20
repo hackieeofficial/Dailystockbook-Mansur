@@ -39,12 +39,12 @@ export const CalendarView: React.FC = () => {
   const selectedDateStr = selectedDate ? format(selectedDate, 'dd/MM/yyyy') : null;
   const selectedReport = selectedDateStr ? dailyReports[selectedDateStr] : undefined;
   
-  const selectedTotalSkus = selectedReport?.extracted?.length || 0;
-  const selectedProcessed = selectedReport?.extracted?.filter(item => item.processed).length || 0;
+  const selectedTotalSkus = selectedReport?.stats?.totalSkus ?? (selectedReport?.extracted?.length || 0);
+  const selectedProcessed = selectedReport?.stats?.processedSkus ?? (selectedReport?.extracted?.filter(item => item.processed).length || 0);
   const pendingCount = Math.max(0, selectedTotalSkus - selectedProcessed);
   
   // Calculate 0 Stock (items with balanceQty <= 0)
-  const zeroStockCount = selectedReport?.extracted?.filter(item => item.balanceQty <= 0).length || 0;
+  const zeroStockCount = selectedReport?.stats?.zeroStockSkus ?? (selectedReport?.extracted?.filter(item => item.balanceQty <= 0).length || 0);
 
   return (
     <div className="flex-1 px-3.5 pt-3.5 md:p-6 lg:p-8 pb-8 w-full bg-warmCanvas overflow-y-auto no-scrollbar animate-fade-in">
@@ -102,7 +102,7 @@ export const CalendarView: React.FC = () => {
             const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
             
             const hasData = dailyReports[dateStr] !== undefined;
-            const extractedCount = dailyReports[dateStr]?.extracted?.length || 0;
+            const extractedCount = dailyReports[dateStr]?.stats?.totalSkus ?? (dailyReports[dateStr]?.extracted?.length || 0);
 
             if (!isCurrentMonthDay) {
               return (

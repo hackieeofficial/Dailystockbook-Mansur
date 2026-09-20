@@ -46,6 +46,11 @@ export interface DailyReport {
   extracted: ExtractedItem[];
   final: FinalTask[];
   tombstones: Record<string, number>; // taskId -> timestamp
+  stats?: {
+    totalSkus: number;
+    processedSkus: number;
+    zeroStockSkus: number;
+  };
   _by: string; // DS_BUILD version
   _at: number; // timestamp
 }

@@ -8,13 +8,15 @@ export function normRep(d: any): DailyReport {
   if (!d || typeof d !== 'object') {
     return { extracted: [], final: [], tombstones: {}, _by: '?', _at: Date.now() };
   }
-  return {
+  const rep: DailyReport = {
     extracted: Array.isArray(d.extracted) ? d.extracted : [],
     final: Array.isArray(d.final) ? d.final : [],
     tombstones: (d.tombstones && typeof d.tombstones === 'object') ? d.tombstones : {},
     _by: d._by || '?',
     _at: d._at || Date.now()
   };
+  if (d.stats) rep.stats = d.stats;
+  return rep;
 }
 
 /**
@@ -100,10 +102,15 @@ export function mergeDailyReport(
     }
   });
 
-  const merged = {
+  const merged: DailyReport = {
     extracted: mergedExtract,
     final: mergedFinal,
     tombstones: tombs,
+    stats: mergedExtract.length > 0 ? {
+      totalSkus: mergedExtract.length,
+      processedSkus: mergedExtract.filter(item => item && item.processed).length,
+      zeroStockSkus: mergedExtract.filter(item => item && (item.balanceQty || 0) <= 0).length
+    } : (incoming.stats || local.stats),
     _by: dsBuild,
     _at: Date.now()
   };

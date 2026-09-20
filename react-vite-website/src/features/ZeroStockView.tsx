@@ -128,7 +128,26 @@ export const ZeroStockView: React.FC = () => {
   const [newSupplierName, setNewSupplierName] = useState('');
   const [isAddingSupplierToRefill, setIsAddingSupplierToRefill] = useState(false);
 
+  const [isFetching, setIsFetching] = useState(false);
   const selectedReport = dailyReports[selectedDateStr];
+
+  React.useEffect(() => {
+    if (selectedDateStr && selectedReport && selectedReport._by === 'skeleton' && !isFetching) {
+      const loadData = async () => {
+        setIsFetching(true);
+        const { supabase } = await import('../lib/supabase');
+        const { data } = await supabase.from('daily_reports').select('data').eq('date_str', selectedDateStr).maybeSingle();
+        setIsFetching(false);
+        
+        if (data && data.data) {
+          const { mergeDailyReport } = await import('../utils/sync');
+          const mg = mergeDailyReport(selectedReport, data.data, 'react-v1');
+          useAppStore.getState().updateDailyReportLocal(selectedDateStr, mg.merged);
+        }
+      };
+      loadData();
+    }
+  }, [selectedDateStr, selectedReport]);
 
   let zeroStockItems: ExtractedItem[] = useMemo(() => {
     return selectedReport?.extracted?.filter(
@@ -140,10 +159,14 @@ export const ZeroStockView: React.FC = () => {
     const counts: Record<string, number> = {};
     availableDates.forEach(d => {
       const rep = dailyReports[d];
-      if (rep && rep.extracted) {
-        counts[d] = rep.extracted.filter(item => {
-          return (item.balanceQty || 0) <= 0;
-        }).length;
+      if (rep) {
+        if (rep.stats && rep.stats.zeroStockSkus !== undefined) {
+          counts[d] = rep.stats.zeroStockSkus;
+        } else if (rep.extracted) {
+          counts[d] = rep.extracted.filter(item => (item.balanceQty || 0) <= 0).length;
+        } else {
+          counts[d] = 0;
+        }
       }
     });
     return counts;

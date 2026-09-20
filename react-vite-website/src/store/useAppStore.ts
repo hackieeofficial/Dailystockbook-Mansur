@@ -83,16 +83,31 @@ export const useAppStore = create<AppState>()((set) => {
     },
     updateDailyReport: (dateStr, report) => {
       set((state) => {
-        const next = { ...state.dailyReports, [dateStr]: report };
+        const stats = report.extracted ? {
+          totalSkus: report.extracted.length,
+          processedSkus: report.extracted.filter(item => item.processed).length,
+          zeroStockSkus: report.extracted.filter(item => item.balanceQty <= 0).length
+        } : report.stats;
+        
+        const nextReport = { ...report, stats };
+        const next = { ...state.dailyReports, [dateStr]: nextReport };
         import('../lib/syncEngine').then(({ cloudSaveDateReportNow }) => {
           // notify=true: this is the primary user-triggered save action
-          cloudSaveDateReportNow(dateStr, report, true);
+          cloudSaveDateReportNow(dateStr, nextReport, true);
         });
         return { dailyReports: next };
       });
     },
     updateDailyReportLocal: (dateStr, report) => {
-      set((state) => ({ dailyReports: { ...state.dailyReports, [dateStr]: report } }));
+      set((state) => {
+        const stats = report.extracted ? {
+          totalSkus: report.extracted.length,
+          processedSkus: report.extracted.filter(item => item.processed).length,
+          zeroStockSkus: report.extracted.filter(item => item.balanceQty <= 0).length
+        } : report.stats;
+        
+        return { dailyReports: { ...state.dailyReports, [dateStr]: { ...report, stats } } };
+      });
     },
     deleteDailyReport: (dateStr) => {
       set((state) => {
@@ -543,6 +558,12 @@ export const useAppStore = create<AppState>()((set) => {
             };
           }
           
+          const stats = nextReport.extracted ? {
+            totalSkus: nextReport.extracted.length,
+            processedSkus: nextReport.extracted.filter(item => item.processed).length,
+            zeroStockSkus: nextReport.extracted.filter(item => item.balanceQty <= 0).length
+          } : nextReport.stats;
+          nextReport.stats = stats;
           nextReport._at = Date.now();
           const nextReports = { ...state.dailyReports, [dateStr]: nextReport };
           import('../lib/syncEngine').then(({ cloudSaveDateReportNow, triggerEventNotification }) => {
@@ -577,6 +598,12 @@ export const useAppStore = create<AppState>()((set) => {
           nextReport.extracted[itemIdx] = newItem;
         }
         
+        const stats = nextReport.extracted ? {
+          totalSkus: nextReport.extracted.length,
+          processedSkus: nextReport.extracted.filter(item => item.processed).length,
+          zeroStockSkus: nextReport.extracted.filter(item => item.balanceQty <= 0).length
+        } : nextReport.stats;
+        nextReport.stats = stats;
         nextReport._at = Date.now();
         const nextReports = { ...state.dailyReports, [dateStr]: nextReport };
         import('../lib/syncEngine').then(({ cloudSaveDateReportNow }) => {
