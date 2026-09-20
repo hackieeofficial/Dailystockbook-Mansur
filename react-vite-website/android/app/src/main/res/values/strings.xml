@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Daily Stock Book</string>
+    <string name="title_activity_main">Daily Stock Book</string>
+    <string name="package_name">com.mansur.dailystock</string>
+    <string name="custom_url_scheme">com.mansur.dailystock</string>
+</resources>

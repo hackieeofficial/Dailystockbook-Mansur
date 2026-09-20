@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "734846876875",
+    "firebase_url": "https://mansur2026feb-default-rtdb.firebaseio.com",
+    "project_id": "mansur2026feb",
+    "storage_bucket": "mansur2026feb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734846876875:android:007ffe2e587c6a90bfef4e",
+        "android_client_info": {
+          "package_name": "com.mansur.dailystock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734846876875-67gm2oumbk23cbncmgvt6ln04jrej99v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5d7pAN3apKwDJKhdgIBGBxMtSz4oFJI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734846876875-67gm2oumbk23cbncmgvt6ln04jrej99v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "734846876875-qfpjpsltakqrs5766caku0gmtg295f4l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mansurenterprises.portal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

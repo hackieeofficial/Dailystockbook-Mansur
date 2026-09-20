@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.mansurenterprises.dailystockapp",
+    "sha256_cert_fingerprints": [
+      "7D:F2:0D:8D:3B:B0:FE:59:51:67:4E:0E:B1:3C:8D:D5:C2:93:36:42:EE:04:B9:DD:A4:CA:24:2C:06:B8:DF:09"
+    ]
+  }
+}]
