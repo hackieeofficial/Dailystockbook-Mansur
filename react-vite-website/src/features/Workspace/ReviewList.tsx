@@ -69,7 +69,9 @@ export const ReviewList: React.FC<{ dateStr: string }> = ({ dateStr }) => {
       }
       return p;
     });
-    updateDailyReport(dateStr, { ...stateReport, extracted: updated as ExtractedItem[], _at: Date.now(), _by: 'react-v1' });
+    // Also remove any orphaned final task for this item (e.g. from a concurrent refill)
+    const cleanedFinal = (stateReport.final || []).filter(t => t.originalId !== item.id);
+    updateDailyReport(dateStr, { ...stateReport, extracted: updated as ExtractedItem[], final: cleanedFinal, _at: Date.now(), _by: 'react-v1' });
     playSkipSound();
   }, [dateStr, updateDailyReport, user]);
 

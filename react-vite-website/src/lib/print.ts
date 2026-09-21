@@ -16,7 +16,7 @@ function numFormat(v: any) {
 }
 
 function buildRefillPdf(list: any[], meta: any) {
-  const doc = new jsPDF({ unit: 'mm', format: 'a5', orientation: 'portrait' });
+  const doc = new jsPDF({ unit: 'mm', format: 'a5', orientation: 'landscape' });
   const M = 4;
   let y = 6;
 
@@ -240,7 +240,7 @@ export async function sendToPrinter(printer: any, blob: Blob, meta: any, title: 
     
     // Timeout
     setTimeout(() => {
-      if (!handled) { handled = true; unsub(); resolve(); }
+      if (!handled) { handled = true; unsub(); reject(new Error("Print job timed out (no response from office PC). Please check if it's online.")); }
     }, 90000);
   });
 }

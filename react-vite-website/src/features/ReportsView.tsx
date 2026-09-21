@@ -174,7 +174,7 @@ export const ReportsView: React.FC = () => {
   return (
     <>
       <PrintDialog isOpen={printDialogOpen} onClose={() => setPrintDialogOpen(false)} tasks={filteredData as any} reportTitle="Global Filtered Report" reportDate={fromDate && toDate ? (fromDate === toDate ? fromDate : `${fromDate} - ${toDate}`) : 'All Time'} />
-      <main className="w-full max-w-md md:max-w-none lg:max-w-6xl mx-auto pb-6 px-3 md:px-6 pt-3 md:pt-6 flex flex-col gap-3 overflow-x-hidden">
+      <main className="w-full max-w-full lg:max-w-6xl mx-auto pb-6 px-3 md:px-6 pt-3 md:pt-6 flex flex-col gap-3 overflow-x-hidden">
       {/* Header */}
       <header className="flex flex-col gap-3 pt-1">
         <div className="flex flex-wrap items-center justify-between gap-2">

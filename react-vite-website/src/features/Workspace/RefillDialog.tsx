@@ -37,9 +37,9 @@ export const RefillDialog: React.FC<RefillDialogProps> = ({ item, onClose, dateS
   const handleConfirm = async () => {
     if (isProcessing) return;
 
-    const qty = parseInt(qtyStr, 10);
+    const qty = parseFloat(qtyStr);
     if (isNaN(qty) || qty <= 0) {
-      alert('Enter a valid refill quantity (numbers only).');
+      alert('Enter a valid refill quantity (e.g., 10 or 1.5).');
       return;
     }
 
@@ -101,10 +101,22 @@ export const RefillDialog: React.FC<RefillDialogProps> = ({ item, onClose, dateS
       refillAt: finalItem.refillAt
     });
 
+    // Deduplicate: if a task for this item already exists (e.g. concurrent refill), overwrite it
+    const existingFinal = (stateReport.final || []);
+    const existingIdx = existingFinal.findIndex(t => t.originalId === item.id);
+    let nextFinal;
+    if (existingIdx >= 0) {
+      // Overwrite the existing task, keeping the original taskId for consistency
+      nextFinal = [...existingFinal];
+      nextFinal[existingIdx] = { ...finalItem, taskId: existingFinal[existingIdx].taskId };
+    } else {
+      nextFinal = [...existingFinal, finalItem];
+    }
+
     updateDailyReport(dateStr, {
       ...stateReport,
       extracted: updatedExtracted as ExtractedItem[],
-      final: [...(stateReport.final || []), finalItem],
+      final: nextFinal,
       _at: Date.now(),
       _by: 'react-v1'
     });
@@ -160,10 +172,10 @@ export const RefillDialog: React.FC<RefillDialogProps> = ({ item, onClose, dateS
             <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Refill Quantity</label>
             <input 
               type="text" 
-              inputMode="numeric"
-              pattern="[0-9]*"
+              inputMode="decimal"
+              pattern="[0-9.]*"
               value={qtyStr}
-              onChange={e => setQtyStr(e.target.value.replace(/[^0-9]/g, ''))}
+              onChange={e => setQtyStr(e.target.value.replace(/[^0-9.]/g, ''))}
               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-black text-slate-900 focus:outline-none focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] transition-all shadow-sm"
               placeholder="0"
               onKeyDown={e => { if (e.key === 'Enter') handleConfirm(); }}

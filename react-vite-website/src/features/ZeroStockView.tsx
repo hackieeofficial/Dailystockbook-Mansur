@@ -195,6 +195,10 @@ export const ZeroStockView: React.FC = () => {
       alert("Please select a supplier first.");
       return;
     }
+    if (!hasPerm('action:refill_mark')) {
+      alert('Permission denied: you don\'t have the "Mark Items as Ordered" right. Ask an admin.');
+      return;
+    }
     markItemForRefill(selectedDateStr, item.id, chosenSupplier);
   };
   
@@ -362,6 +366,10 @@ export const ZeroStockView: React.FC = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
+                          if (!hasPerm('action:refill_clear')) {
+                            alert('Permission denied: you don\'t have the "Clear Refill Status" right. Ask an admin.');
+                            return;
+                          }
                           clearRefillStatus(selectedDateStr, item.id);
                         }}
                         className="text-[10px] font-bold text-red-500 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md border border-red-100 transition active:scale-95 shrink-0 flex items-center space-x-1"
@@ -370,6 +378,16 @@ export const ZeroStockView: React.FC = () => {
                         <span>Undo</span>
                       </button>
                     </div>
+                  </div>
+                ) : item.decisionType === 'REFILL' ? (
+                  <div className="pt-1 border-t border-warmBorder/60 flex items-center justify-between gap-1.5">
+                    <div className="flex items-center space-x-1.5 text-[10px] text-slate-600 break-words">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                      <span className="break-words font-medium">Being refilled from Godown by: <strong className="text-navy-850">{item.refillBy || 'Unknown'}</strong></span>
+                    </div>
+                    <span className="px-1.5 py-1 rounded-md border border-blue-200 bg-blue-50 text-blue-700 text-[10px] font-bold uppercase shrink-0">
+                      REFILLING
+                    </span>
                   </div>
                 ) : (
                   <div className="pt-1 border-t border-warmBorder/60 flex items-center gap-1.5">

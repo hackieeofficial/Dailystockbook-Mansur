@@ -137,9 +137,11 @@ export async function cloudPullAll(): Promise<{ ok: boolean; missing: boolean }>
           } else if (row.key === 'user_avatars') {
             nextState.userAvatars = row.value || {};
           } else if (row.key === 'activity_logs' && Array.isArray(row.value)) {
-            // We just take the remote one for now since it's an append-only sequence driven by clients, 
-            // but a merge by id/timestamp would be better if needed. We'll simply set it.
-            nextState.activityLogs = row.value;
+            const map = new Map();
+            [...(state.activityLogs || []), ...row.value].forEach(log => {
+              if (!map.has(log.id) || map.get(log.id).timestamp < log.timestamp) map.set(log.id, log);
+            });
+            nextState.activityLogs = Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp).slice(0, 1000);
           } else if (row.key === 'main_godowns' && Array.isArray(row.value)) {
             nextState.mainGodowns = row.value;
           } else if (row.key === 'global_notification_preferences') {
@@ -383,8 +385,16 @@ export function initCloudRealtime() {
             return { suppliers: res.list };
           } else if (newRec.key === 'user_permissions') {
             return { userPermissions: newRec.value || {} };
+          } else if (newRec.key === 'user_avatars') {
+            return { userAvatars: newRec.value || {} };
           } else if (newRec.key === 'main_godowns') {
             return { mainGodowns: newRec.value || [] };
+          } else if (newRec.key === 'activity_logs') {
+            const map = new Map();
+            [...(state.activityLogs || []), ...(newRec.value || [])].forEach(log => {
+              if (!map.has(log.id) || map.get(log.id).timestamp < log.timestamp) map.set(log.id, log);
+            });
+            return { activityLogs: Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp).slice(0, 1000) };
           } else if (newRec.key === 'global_notification_preferences') {
             useSyncStore.getState().setGlobalNotificationPrefs(newRec.value || {
               report_deleted: 'admin',
@@ -453,6 +463,7 @@ export async function flushPending() {
         else if (key === 'user_permissions') currentValue = appStore.userPermissions;
         else if (key === 'users') currentValue = appStore.configuredUsers;
         else if (key === 'user_avatars') currentValue = appStore.userAvatars;
+        else if (key === 'activity_logs') currentValue = appStore.activityLogs;
         
         await cloudSaveSettingNow(key, currentValue);
       } else {

@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { supabase, SUPABASE_CONFIG } from './supabase';
 import { useAuthStore } from '../store/useAuthStore';
 import { useAppStore } from '../store/useAppStore';
+import { useSyncStore } from '../store/useSyncStore';
 import type { UserIdentity } from '../types';
 import { cloudPullAll, triggerEventNotification } from './syncEngine';
 import { usePreferencesStore } from '../store/usePreferencesStore';
@@ -153,6 +154,7 @@ export async function logout() {
     logger.error('auth', 'logout', 'Logout failed', e);
   }
   useAppStore.getState().resetStore();
+  useSyncStore.getState().resetStore();
   authStore.setUser(null);
 }
 

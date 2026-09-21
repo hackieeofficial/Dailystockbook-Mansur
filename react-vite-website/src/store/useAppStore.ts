@@ -26,6 +26,7 @@ export interface AppState {
   setGodownAliases: (aliases: Record<string, string>) => void;
   updateGodownAliases: (oldName: string, newName: string) => void;
   removeGodownAlias: (alias: string) => void;
+  clearGodownAliases: () => void;
   reorderGodown: (fromIndex: number, toIndex: number) => void;
   setProductMaster: (master: Record<string, ProductMasterEntry>) => void;
   clearProductMaster: () => void;
@@ -92,8 +93,7 @@ export const useAppStore = create<AppState>()((set) => {
         const nextReport = { ...report, stats };
         const next = { ...state.dailyReports, [dateStr]: nextReport };
         import('../lib/syncEngine').then(({ cloudSaveDateReportNow }) => {
-          // notify=true: this is the primary user-triggered save action
-          cloudSaveDateReportNow(dateStr, nextReport, true);
+          cloudSaveDateReportNow(dateStr, nextReport, false);
         });
         return { dailyReports: next };
       });
@@ -342,6 +342,12 @@ export const useAppStore = create<AppState>()((set) => {
         return { godownAliases: next };
       });
     },
+    clearGodownAliases: () => {
+      set({ godownAliases: {} });
+      import('../lib/syncEngine').then(({ cloudSaveSettingNow }) => {
+        cloudSaveSettingNow('godown_aliases', {});
+      });
+    },
     reorderGodown: (fromIndex, toIndex) => {
       set((state) => {
         const next = [...state.configuredGodowns];
@@ -426,7 +432,7 @@ export const useAppStore = create<AppState>()((set) => {
           const next = [newLog, ...state.activityLogs].slice(0, 1000); // keep max 1000 logs
 
           import('../lib/syncEngine').then(({ cloudSaveSettingNow }) => {
-            cloudSaveSettingNow('activityLogs', next);
+            cloudSaveSettingNow('activity_logs', next);
           });
           
           return { activityLogs: next };

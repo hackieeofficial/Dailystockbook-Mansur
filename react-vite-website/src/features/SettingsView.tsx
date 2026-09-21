@@ -585,8 +585,9 @@ export const SettingsView: React.FC = () => {
     
     clearProductMaster();
     setConfiguredGodowns(['Main Store']);
-    const { setMainGodowns } = useAppStore.getState();
+    const { setMainGodowns, clearGodownAliases } = useAppStore.getState();
     setMainGodowns(['Main Store']);
+    clearGodownAliases();
     clearSuppliers();
     
     if (failed > 0) {

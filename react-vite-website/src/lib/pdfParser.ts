@@ -72,7 +72,8 @@ async function processPDFProxy(pdf: pdfjsLib.PDFDocumentProxy): Promise<{ dateSt
   let reportDate: string | null = null;
   
   // Reject multi-day reports to prevent data corruption
-  if (/(?:From|Period)\s+\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}\s+to\s+\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/i.test(fullText)) {
+  const multiDayMatch = fullText.match(/(?:From|Period)\s+(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s+to\s+(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
+  if (multiDayMatch && multiDayMatch[1] !== multiDayMatch[2]) {
     throw new Error("Multi-day reports are not supported. Please generate and upload a report for a single date only.");
   }
 
@@ -182,16 +183,28 @@ async function processPDFProxy(pdf: pdfjsLib.PDFDocumentProxy): Promise<{ dateSt
   const productMaster = appStore.productMaster;
   const configuredGodowns = appStore.configuredGodowns;
 
+  const usedIds = new Set<string>();
+
   function pushActiveProduct() {
     if (activeProduct && activeProduct.nameLines.length > 0) {
-      const pCode = activeProduct.nameLines[0] || '';
-      const pCategory = activeProduct.nameLines.slice(1).join(' ') || '';
-      const prodKey = `${activeProduct.brand}_${pCode}`.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+      const pCode = (activeProduct.nameLines[0] || '').trim();
+      const pCategory = activeProduct.nameLines.slice(1).join(' ').trim();
+      
+      let baseId = `${(activeProduct.brand || '').trim()}_${pCode}`.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+      
+      let prodKey = baseId;
+      let counter = 1;
+      while (usedIds.has(prodKey)) {
+        prodKey = `${baseId}_${counter}`;
+        counter++;
+      }
+      usedIds.add(prodKey);
+      
       const memory = productMaster[prodKey];
 
       extractedProducts.push({
         id: prodKey,
-        brand: activeProduct.brand,
+        brand: (activeProduct.brand || '').trim(),
         code: pCode,
         category: pCategory,
         opening: activeProduct.opening,
@@ -314,11 +327,19 @@ export function saveExtractedPDFToStore(dateStr: string, extractedProducts: Extr
     zeroStockSkus: finalExtracted.filter(item => item.balanceQty <= 0).length
   };
 
-  appStore.updateDailyReport(dateStr, {
+  const updatedReport = {
     ...(currentReport || { final: [], tombstones: {} }),
     extracted: finalExtracted,
     stats,
     _at: Date.now(),
     _by: 'react-v1'
+  };
+
+  appStore.updateDailyReport(dateStr, updatedReport);
+  import('../lib/syncEngine').then(({ triggerEventNotification }) => {
+    triggerEventNotification('pdf_uploaded', {
+      title: 'New Sheet Uploaded',
+      body: `Stock status sheet for ${dateStr} is ready for review.`
+    }).catch(() => {});
   });
 }

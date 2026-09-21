@@ -113,7 +113,7 @@ export const AppShell: React.FC = () => {
     <div className="h-[100dvh] w-full pt-safe flex justify-center bg-warmCanvas font-sans text-navy-850 antialiased overflow-hidden select-none">
       <GlobalConfirmDialog />
       {/* Responsive Screen Container */}
-      <div className="w-full max-w-md md:max-w-none mx-auto h-full bg-warmCanvas flex flex-col md:flex-row shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-full mx-auto h-full bg-warmCanvas flex flex-col md:flex-row shadow-2xl relative overflow-hidden">
         
         {/* Network Status Banners */}
         {!isCloudOnline && (

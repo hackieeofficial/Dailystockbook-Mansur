@@ -98,7 +98,14 @@ export const WorkspaceView: React.FC = () => {
     );
   }
 
-  if (!report || report._by === 'skeleton') return null;
+  if (!report || report._by === 'skeleton') {
+    return (
+      <div className="flex flex-col h-full items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accentBlue"></div>
+        <p className="mt-4 text-sm text-slate-500 font-medium">Checking sheet status...</p>
+      </div>
+    );
+  }
 
   const handleDelete = () => {
     if (!hasPerm('action:daybook_delete')) {

@@ -48,7 +48,7 @@ export function PrintDialog({ isOpen, onClose, tasks, reportTitle, reportDate }:
       setPrintingStatus('sending');
       setStatusMessage(`Sending to printer: ${printerName}...`);
       
-      await sendToPrinter(printerId, blob, { date: reportDate || 'Custom' }, reportTitle, (msg) => {
+      await sendToPrinter({ id: printerId, name: printerName }, blob, { date: reportDate || 'Custom' }, reportTitle, (msg) => {
          setStatusMessage(msg);
       });
       

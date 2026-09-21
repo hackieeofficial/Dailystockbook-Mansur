@@ -57,26 +57,7 @@ export const UploadView: React.FC = () => {
 
       saveExtractedPDFToStore(result.dateStr, result.items);
       
-      const { cloudSaveDateReportNow } = await import('../lib/syncEngine');
-      const currentReport = useAppStore.getState().dailyReports[result.dateStr];
-      
-      if (currentReport) {
-        setStatus({ message: `Uploading ${result.items.length} items to cloud...`, type: 'success' });
-        const { success, error: syncError } = await cloudSaveDateReportNow(result.dateStr, currentReport, true);
-        if (!success) {
-          throw new Error(syncError || 'Cloud upload failed. Check permissions or internet.');
-        }
-      }
-
       logActivity('Upload PDF', `Parsed and uploaded PDF for date: ${result.dateStr}`);
-      
-      // Notify after upload — import dynamically to avoid circular deps at top-level
-      import('../lib/syncEngine').then(({ triggerEventNotification }) => {
-        triggerEventNotification('pdf_uploaded', {
-          title: 'PDF Uploaded',
-          body: `${result.items.length} items uploaded for date ${result.dateStr}.`
-        }).catch(() => {});
-      });
       
       setStatus({  
         message: `Success! Extracted ${result.items.length} items.`, 
@@ -105,7 +86,7 @@ export const UploadView: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-warmCanvas text-slate-800 overflow-hidden animate-fade-in w-full max-w-md md:max-w-none lg:max-w-6xl mx-auto relative pb-safe">
+    <div className="flex flex-col h-full bg-warmCanvas text-slate-800 overflow-hidden animate-fade-in w-full max-w-full lg:max-w-6xl mx-auto relative pb-safe">
       <main className="flex-1 flex flex-col px-4 pt-3 md:pt-8 md:px-8 pb-2 justify-between md:justify-start w-full h-full" data-purpose="primary-upload-container">
         
         {/* Top Bar & Live Ingestion Status */}
